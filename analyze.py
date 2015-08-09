@@ -10,25 +10,29 @@ discussion = "970324526351303"
 access_token = sys.argv[1]
 url = 'https://graph.facebook.com/v2.4/%s?fields=comments&access_token=%s' % (discussion, access_token)
 
-def u(s):
-  return unicode(s, "utf-8")
+def u(l):
+  if isinstance(l, str): l = [l]
+  return [unicode(s, "utf-8") for s in l]
 
-keywords = [
-  u("transport"),
-  u("jobb"),
-  u("billig"),
-  [u("miljövänlig"), u("miljö vänlig"), u("miljön")],
-  u("snabb"),
-  u("frihet"),
-  u("hälsa"), u("mår bra"),
-  u("roligt"),
-  [u("bestämma"), u("styr")],
-  u("enkel"),
-  u("vackrast"),
-  u("överallt"),
-  [u("träning"), u("motion"), u("stark")],
-  u("natur"),
-]
+def format(l):
+  return [u(x) for x in l]
+
+keywords = format([
+  "transport",
+  "jobb",
+  "billig",
+  ["miljövänlig", "miljö vänlig", "miljön"],
+  "snabb",
+  "frihet",
+  ["hälsa", "mår bra"],
+  "roligt",
+  ["bestämma", "styr"],
+  "enkel",
+  "vackrast",
+  "överallt",
+  ["träning", "motion", "stark"],
+  "natur",
+])
 
 user_stats = {}
 counts = {}

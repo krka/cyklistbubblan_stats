@@ -37,18 +37,23 @@ keywords = format([
 user_stats = {}
 counts = {}
 
-while url:
+num_comments = 0
+while url is not '':
   r = requests.get(url)
   if r.status_code != 200:
+    print r.text
     sys.exit(1)
   data = r.json()
 
-  if not "comments" in data:
-    break
+  if "comments" in data:
+    data = data["comments"]
 
-  comments = data["comments"]
-  for comment in comments["data"]:
+  if not "data" in data: 
+    print r.text
+    sys.exit(1)
 
+  for comment in data["data"]:
+    num_comments += 1
     user_id = comment["from"]["id"]
     user_stat = user_stats.get(user_id, {})
     user_stats[user_id] = user_stat
@@ -62,11 +67,15 @@ while url:
           user_stat[x[0]] = 1
           counts[x[0]] = 0
 
-  paging = comments["paging"]
+  paging = data["paging"]
+  if not "next" in paging:
+    break
+
   url = paging["next"]
-  print
-  print url
-  print
+
+print url
+
+print "Total number of comments", num_comments
 
 for user_stat in user_stats.itervalues():
   for keyword, count in user_stat.iteritems():
